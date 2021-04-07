@@ -11,11 +11,9 @@ public class main {
 		Almacen al = new AlmacenSem(); 
 		for (int i = 0; i < M; ++i){
 			prod[i] = new Productor(al);
-			prod[i].start();
 		}
 		for (int j = 0; j < K; ++j){
 			cons[j] = new Consumidor(al);
-			cons[j].start();
 		}
 	}
 }
