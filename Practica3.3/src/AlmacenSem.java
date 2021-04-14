@@ -12,7 +12,10 @@ public class AlmacenSem implements Almacen{
 	int N;
 	AlmacenSem(int N){
 		this.buff = new Producto[N];
-		this.empty = new Semaphore(1);
+		for(int i = 0; i < N; ++i)
+			buff[i] = null;
+		
+		this.empty = new Semaphore(N);
 		this.full = new Semaphore(0);
 		this.mutexP = new Semaphore(1);
 		this.mutexC = new Semaphore(1);
@@ -20,19 +23,18 @@ public class AlmacenSem implements Almacen{
 		this.fin = 0;
 		this.N = N;
 	}
-	public void almacenar(Producto producto) {
+	public void almacenar(Producto producto) throws Exception {
 		try {
 			empty.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		try {
 			mutexP.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		System.out.println(buff.toString());
+		if(buff[fin] != null) {
+			throw new Exception("NOT CONSUMED");
+		}
 		buff[fin] = producto;
 		
 		fin = (fin+1) % N;
@@ -42,19 +44,20 @@ public class AlmacenSem implements Almacen{
 		
 	}
 
-	public Producto extraer() {
+	public Producto extraer() throws Exception {
 		try {
 			full.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		 try {
 			mutexC.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
 		Producto p = buff[ini];
+		if(p == null) throw new Exception("NULL");
+		if(p.consumido) throw new Exception("TWICE");
+		p.consumido = true;
+		buff = null;
+		
 		ini = (ini + 1) % N;
 		mutexC.release();
 		empty.release();

@@ -9,7 +9,12 @@ public class Productor extends Thread {
     public void run() {
     	while (true){
     		Producto p = new Producto();
-    		al.almacenar(p);
+    		try {
+				al.almacenar(p);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
 }

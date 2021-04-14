@@ -8,7 +8,12 @@ public class Consumidor extends Thread {
 
     public void run() {
     	while (true){
-    		al.extraer();
+    		try {
+				al.extraer();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
 }

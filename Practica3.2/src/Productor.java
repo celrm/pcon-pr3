@@ -1,7 +1,7 @@
 
-
 public class Productor extends Thread {
-	Almacen al;
+	Almacen al;	
+	
     Productor(Almacen al) {
     	this.al = al;
     }
@@ -9,7 +9,13 @@ public class Productor extends Thread {
     public void run() {
     	while (true){
     		Producto p = new Producto();
-    		al.almacenar(p);
+    		try {
+				al.almacenar(p);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+	    		System.out.println("PROD");
+			}
     	}
     }
 }
