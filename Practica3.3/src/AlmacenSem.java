@@ -30,11 +30,9 @@ public class AlmacenSem implements Almacen{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		System.out.println(buff.toString());
-		if(buff[fin] != null) {
-			throw new Exception("NOT CONSUMED");
-		}
+
+		if(buff[fin] != null) throw new Exception("NOT CONSUMED");
+
 		buff[fin] = producto;
 		
 		fin = (fin+1) % N;
@@ -56,7 +54,7 @@ public class AlmacenSem implements Almacen{
 		if(p == null) throw new Exception("NULL");
 		if(p.consumido) throw new Exception("TWICE");
 		p.consumido = true;
-		buff = null;
+		buff[ini] = null;
 		
 		ini = (ini + 1) % N;
 		mutexC.release();
